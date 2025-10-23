@@ -49,3 +49,10 @@ function generateCosmoResponse(userText) {
 }
 
 }
+
+document.getElementById("userInput").addEventListener("keydown", function (event) {
+  if (event.key === "Enter") {
+    event.preventDefault(); // Prevent form submission or newline
+    sendQuery();
+  }
+});
