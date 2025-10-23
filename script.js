@@ -1,12 +1,20 @@
-window.onload = function () {
-  setTimeout(() => {
-    document.getElementById("loader").style.display = "none";
-    document.getElementById("main-content").style.display = "block";
-  }, 2000); // Simulate 2-second loading
-};
+// Theme cycling setup
+const themes = ["nebula", "saturn", "noir", "launchpad", "earthrise"];
+let currentThemeIndex = 0;
 
+function applyTheme(themeName) {
+  document.body.className = "";
+  document.body.classList.add(`theme-${themeName}`);
+  document.getElementById("themeSelect").value = themeName;
+}
 
-  function sendQuery() {
+function cycleTheme() {
+  currentThemeIndex = (currentThemeIndex + 1) % themes.length;
+  applyTheme(themes[currentThemeIndex]);
+}
+
+// Chat logic
+function sendQuery() {
   const input = document.getElementById("userInput");
   const chatBox = document.getElementById("chat-box");
   const userText = input.value.trim();
@@ -20,16 +28,16 @@ window.onload = function () {
   input.value = "";
   chatBox.scrollTop = chatBox.scrollHeight;
 
-  // Generate a simulated AI response
+  // Generate bot response
   const botMsg = document.createElement("div");
   botMsg.className = "message bot";
-
   const response = generateCosmoResponse(userText);
   botMsg.textContent = response;
   chatBox.appendChild(botMsg);
   chatBox.scrollTop = chatBox.scrollHeight;
 }
 
+// AI-like response generator
 function generateCosmoResponse(userText) {
   const lower = userText.toLowerCase();
 
@@ -39,20 +47,26 @@ function generateCosmoResponse(userText) {
     return "☁️ I can't check live weather yet, but I recommend packing for cosmic conditions!";
   } else if (lower.includes("joke")) {
     return "🪐 Why did the astronaut break up with the alien? They needed space!";
-  } else if (lower.includes("theme")) {
+  } else if (lower.includes("theme") || lower.includes("style")) {
     return "🎨 You can change my style using the dropdown or the 'Change Style' button above!";
   } else if (lower.includes("who are you")) {
     return "🚀 I'm CosmoAI, your interstellar companion built to explore ideas and answer questions.";
+  } else if (lower.includes("help")) {
+    return "🛠️ I'm here to chat, answer questions, and look stylish doing it. Ask me anything!";
   } else {
     return `🤖 I'm still learning, but I heard you say: "${userText}". Want to ask me something cosmic?`;
   }
 }
 
-}
+// Enable Enter key to send message
+document.addEventListener("DOMContentLoaded", function () {
+  applyTheme(themes[currentThemeIndex]);
 
-document.getElementById("userInput").addEventListener("keydown", function (event) {
-  if (event.key === "Enter") {
-    event.preventDefault(); // Prevent form submission or newline
-    sendQuery();
-  }
+  const input = document.getElementById("userInput");
+  input.addEventListener("keydown", function (event) {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      sendQuery();
+    }
+  });
 });
