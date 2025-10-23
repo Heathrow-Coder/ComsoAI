@@ -4,22 +4,83 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>CosmoAI Chat</title>
-  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background: #f0f0f0;
+    }
+
+    #chat-container {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    header {
+      background: #222;
+      color: white;
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    #chat-box {
+      flex: 1;
+      padding: 1rem;
+      overflow-y: auto;
+      background: white;
+    }
+
+    .message {
+      max-width: 70%;
+      margin: 0.5rem 0;
+      padding: 0.75rem 1rem;
+      border-radius: 10px;
+    }
+
+    .user {
+      align-self: flex-end;
+      background-color: #d0eaff;
+    }
+
+    .bot {
+      align-self: flex-start;
+      background-color: #eee;
+    }
+
+    #input-area {
+      display: flex;
+      padding: 1rem;
+      background: #ddd;
+    }
+
+    #userInput {
+      flex: 1;
+      padding: 0.75rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 5px;
+    }
+
+    button {
+      margin-left: 0.5rem;
+      padding: 0.75rem 1rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 5px;
+      background-color: #333;
+      color: white;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
   <div id="chat-container">
     <header>
-      <h1>🪐 CosmoAI</h1>
-      <div style="margin-top: 0.5rem;">
-        <select id="themeSelect" onchange="applyTheme(this.value)">
-          <option value="nebula">Nebula Drift</option>
-          <option value="saturn">Saturn Station</option>
-          <option value="noir">Cosmic Noir</option>
-          <option value="launchpad">Launchpad Alpha</option>
-          <option value="earthrise">Earthrise</option>
-        </select>
-        <button onclick="cycleTheme()">Change Style</button>
-      </div>
+      <h1>CosmoAI</h1>
+      <button onclick="location.reload()">Update Page</button>
     </header>
 
     <div id="chat-box"></div>
@@ -30,6 +91,48 @@
     </div>
   </div>
 
-  <script src="script.js"></script>
+  <script>
+    function sendQuery() {
+      const input = document.getElementById("userInput");
+      const chatBox = document.getElementById("chat-box");
+      const userText = input.value.trim();
+      if (!userText) return;
+
+      const userMsg = document.createElement("div");
+      userMsg.className = "message user";
+      userMsg.textContent = userText;
+      chatBox.appendChild(userMsg);
+      input.value = "";
+      chatBox.scrollTop = chatBox.scrollHeight;
+
+      const botMsg = document.createElement("div");
+      botMsg.className = "message bot";
+      botMsg.textContent = generateCosmoResponse(userText);
+      chatBox.appendChild(botMsg);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function generateCosmoResponse(text) {
+      const lower = text.toLowerCase();
+      if (lower.includes("hello") || lower.includes("hi")) {
+        return "Hello! I'm CosmoAI. What can I help you with?";
+      } else if (lower.includes("joke")) {
+        return "Why don’t astronauts get hungry after being blasted into space? Because they’ve just had a big launch!";
+      } else if (lower.includes("who are you")) {
+        return "I'm CosmoAI — your friendly assistant from the stars!";
+      } else {
+        return `You said: "${text}". I'm still learning, but I'm here to help!`;
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      document.getElementById("userInput").addEventListener("keydown", function (event) {
+        if (event.key === "Enter") {
+          event.preventDefault();
+          sendQuery();
+        }
+      });
+    });
+  </script>
 </body>
 </html>
