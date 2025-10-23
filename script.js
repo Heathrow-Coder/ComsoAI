@@ -70,3 +70,29 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 });
+
+function sendQuery() {
+  const input = document.getElementById("userInput"); // Gets the input box
+  const chatBox = document.getElementById("chat-box"); // Gets the chat display area
+  const userText = input.value.trim(); // Gets the user's message
+
+  if (!userText) return; // If input is empty, do nothing
+
+  // 🟦 Add user message to chat
+  const userMsg = document.createElement("div");
+  userMsg.className = "message user"; // Style as user message
+  userMsg.textContent = userText;
+  chatBox.appendChild(userMsg);
+
+  input.value = ""; // Clear input box
+  chatBox.scrollTop = chatBox.scrollHeight; // Scroll to bottom
+
+  // 🟥 Add bot response to chat
+  const botMsg = document.createElement("div");
+  botMsg.className = "message bot"; // Style as bot message
+  const response = generateCosmoResponse(userText); // Generate reply
+  botMsg.textContent = response;
+  chatBox.appendChild(botMsg);
+
+  chatBox.scrollTop = chatBox.scrollHeight; // Scroll to bottom again
+}
