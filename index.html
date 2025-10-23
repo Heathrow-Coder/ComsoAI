@@ -7,8 +7,10 @@
   <style>
     body {
       margin: 0;
-      font-family: sans-serif;
-      background: #f0f0f0;
+      padding: 0;
+      background-color: #0a0f2c; /* Deep space blue */
+      color: white;
+      font-family: 'Segoe UI', sans-serif;
     }
 
     #chat-container {
@@ -18,19 +20,24 @@
     }
 
     header {
-      background: #222;
-      color: white;
+      background: #111;
       padding: 1rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
 
+    header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+    }
+
     #chat-box {
       flex: 1;
       padding: 1rem;
       overflow-y: auto;
-      background: white;
+      display: flex;
+      flex-direction: column;
     }
 
     .message {
@@ -38,22 +45,26 @@
       margin: 0.5rem 0;
       padding: 0.75rem 1rem;
       border-radius: 10px;
+      line-height: 1.4;
+      word-wrap: break-word;
     }
 
     .user {
       align-self: flex-end;
-      background-color: #d0eaff;
+      background-color: #1e3a8a;
+      color: white;
     }
 
     .bot {
       align-self: flex-start;
-      background-color: #eee;
+      background-color: #334155;
+      color: white;
     }
 
     #input-area {
       display: flex;
       padding: 1rem;
-      background: #ddd;
+      background: #111;
     }
 
     #userInput {
@@ -62,6 +73,12 @@
       font-size: 1rem;
       border: none;
       border-radius: 5px;
+      background-color: #1e293b;
+      color: white;
+    }
+
+    #userInput::placeholder {
+      color: #94a3b8;
     }
 
     button {
@@ -70,16 +87,20 @@
       font-size: 1rem;
       border: none;
       border-radius: 5px;
-      background-color: #333;
+      background-color: #2563eb;
       color: white;
       cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #1d4ed8;
     }
   </style>
 </head>
 <body>
   <div id="chat-container">
     <header>
-      <h1>CosmoAI</h1>
+      <h1>🪐 CosmoAI</h1>
       <button onclick="location.reload()">Update Page</button>
     </header>
 
@@ -98,6 +119,7 @@
       const userText = input.value.trim();
       if (!userText) return;
 
+      // Add user message
       const userMsg = document.createElement("div");
       userMsg.className = "message user";
       userMsg.textContent = userText;
@@ -105,6 +127,7 @@
       input.value = "";
       chatBox.scrollTop = chatBox.scrollHeight;
 
+      // Generate bot response
       const botMsg = document.createElement("div");
       botMsg.className = "message bot";
       botMsg.textContent = generateCosmoResponse(userText);
@@ -114,14 +137,19 @@
 
     function generateCosmoResponse(text) {
       const lower = text.toLowerCase();
+
       if (lower.includes("hello") || lower.includes("hi")) {
-        return "Hello! I'm CosmoAI. What can I help you with?";
+        return "👋 Hello! I'm CosmoAI, your space-savvy assistant. What can I help you with today?";
+      } else if (lower.includes("weather")) {
+        return "☁️ I can't check live weather yet, but I recommend packing for cosmic conditions!";
       } else if (lower.includes("joke")) {
-        return "Why don’t astronauts get hungry after being blasted into space? Because they’ve just had a big launch!";
+        return "🪐 Why did the astronaut break up with the alien? They needed space!";
       } else if (lower.includes("who are you")) {
-        return "I'm CosmoAI — your friendly assistant from the stars!";
+        return "🚀 I'm CosmoAI — your friendly assistant from the stars!";
+      } else if (lower.includes("help")) {
+        return "🛠️ I'm here to chat, answer questions, and look stylish doing it. Ask me anything!";
       } else {
-        return `You said: "${text}". I'm still learning, but I'm here to help!`;
+        return `🤖 You said: "${text}". I'm still learning, but I'm here to help!`;
       }
     }
 
