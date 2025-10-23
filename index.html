@@ -3,109 +3,84 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>CosmoAI Chat</title>
+  <title>CosmoAI Login + Chat</title>
   <style>
     body {
       margin: 0;
-      padding: 0;
-      background-color: #0a0f2c; /* Deep space blue */
+      font-family: sans-serif;
+      background-color: #0a0f2c;
       color: white;
-      font-family: 'Segoe UI', sans-serif;
     }
-
-    #chat-container {
-      display: flex;
+    #login-container, #chat-container {
+      display: none;
       flex-direction: column;
       height: 100vh;
+      padding: 2rem;
     }
-
-    header {
-      background: #111;
-      padding: 1rem;
+    #login-container.active, #chat-container.active {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
     }
-
-    header h1 {
-      margin: 0;
-      font-size: 1.5rem;
+    input, button {
+      margin: 0.5rem 0;
+      padding: 0.75rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 5px;
     }
-
+    input {
+      width: 100%;
+      background: #1e293b;
+      color: white;
+    }
+    button {
+      background: #2563eb;
+      color: white;
+      cursor: pointer;
+    }
     #chat-box {
       flex: 1;
-      padding: 1rem;
       overflow-y: auto;
+      margin: 1rem 0;
       display: flex;
       flex-direction: column;
     }
-
     .message {
       max-width: 70%;
       margin: 0.5rem 0;
       padding: 0.75rem 1rem;
       border-radius: 10px;
-      line-height: 1.4;
-      word-wrap: break-word;
     }
-
-    .user {
-      align-self: flex-end;
-      background-color: #1e3a8a;
-      color: white;
-    }
-
-    .bot {
-      align-self: flex-start;
-      background-color: #334155;
-      color: white;
-    }
-
+    .user { align-self: flex-end; background: #1e3a8a; }
+    .bot { align-self: flex-start; background: #334155; }
     #input-area {
       display: flex;
-      padding: 1rem;
-      background: #111;
     }
-
     #userInput {
       flex: 1;
-      padding: 0.75rem;
-      font-size: 1rem;
-      border: none;
-      border-radius: 5px;
-      background-color: #1e293b;
+      background: #1e293b;
       color: white;
-    }
-
-    #userInput::placeholder {
-      color: #94a3b8;
-    }
-
-    button {
-      margin-left: 0.5rem;
-      padding: 0.75rem 1rem;
-      font-size: 1rem;
-      border: none;
-      border-radius: 5px;
-      background-color: #2563eb;
-      color: white;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background-color: #1d4ed8;
     }
   </style>
 </head>
 <body>
+
+  <!-- Login/Register -->
+  <div id="login-container" class="active">
+    <h2>Login or Register</h2>
+    <input type="text" id="username" placeholder="Username" />
+    <input type="password" id="password" placeholder="Password" />
+    <button onclick="login()">Login</button>
+    <button onclick="register()">Register</button>
+    <p id="login-message"></p>
+  </div>
+
+  <!-- Chat -->
   <div id="chat-container">
-    <header>
-      <h1>🪐 CosmoAI</h1>
-      <button onclick="location.reload()">Update Page</button>
+    <header style="display: flex; justify-content: space-between; align-items: center;">
+      <h2>🪐 CosmoAI</h2>
+      <button onclick="logout()">Logout</button>
     </header>
-
     <div id="chat-box"></div>
-
     <div id="input-area">
       <input type="text" id="userInput" placeholder="Type your message..." />
       <button onclick="sendQuery()">Send</button>
@@ -113,13 +88,52 @@
   </div>
 
   <script>
+    // Account system
+    function register() {
+      const user = document.getElementById("username").value.trim();
+      const pass = document.getElementById("password").value;
+      if (!user || !pass) return showMessage("Please enter both username and password.");
+      if (localStorage.getItem("user_" + user)) {
+        return showMessage("Username already exists.");
+      }
+      localStorage.setItem("user_" + user, pass);
+      showMessage("Registered successfully. You can now log in.");
+    }
+
+    function login() {
+      const user = document.getElementById("username").value.trim();
+      const pass = document.getElementById("password").value;
+      const stored = localStorage.getItem("user_" + user);
+      if (stored && stored === pass) {
+        localStorage.setItem("loggedInUser", user);
+        showChat();
+      } else {
+        showMessage("Invalid username or password.");
+      }
+    }
+
+    function logout() {
+      localStorage.removeItem("loggedInUser");
+      document.getElementById("chat-container").classList.remove("active");
+      document.getElementById("login-container").classList.add("active");
+    }
+
+    function showMessage(msg) {
+      document.getElementById("login-message").textContent = msg;
+    }
+
+    function showChat() {
+      document.getElementById("login-container").classList.remove("active");
+      document.getElementById("chat-container").classList.add("active");
+    }
+
+    // Chat logic
     function sendQuery() {
       const input = document.getElementById("userInput");
       const chatBox = document.getElementById("chat-box");
       const userText = input.value.trim();
       if (!userText) return;
 
-      // Add user message
       const userMsg = document.createElement("div");
       userMsg.className = "message user";
       userMsg.textContent = userText;
@@ -127,7 +141,6 @@
       input.value = "";
       chatBox.scrollTop = chatBox.scrollHeight;
 
-      // Generate bot response
       const botMsg = document.createElement("div");
       botMsg.className = "message bot";
       botMsg.textContent = generateCosmoResponse(userText);
@@ -137,23 +150,22 @@
 
     function generateCosmoResponse(text) {
       const lower = text.toLowerCase();
-
       if (lower.includes("hello") || lower.includes("hi")) {
-        return "👋 Hello! I'm CosmoAI, your space-savvy assistant. What can I help you with today?";
-      } else if (lower.includes("weather")) {
-        return "☁️ I can't check live weather yet, but I recommend packing for cosmic conditions!";
+        return "👋 Hello! I'm CosmoAI. What can I help you with today?";
       } else if (lower.includes("joke")) {
         return "🪐 Why did the astronaut break up with the alien? They needed space!";
       } else if (lower.includes("who are you")) {
         return "🚀 I'm CosmoAI — your friendly assistant from the stars!";
-      } else if (lower.includes("help")) {
-        return "🛠️ I'm here to chat, answer questions, and look stylish doing it. Ask me anything!";
       } else {
         return `🤖 You said: "${text}". I'm still learning, but I'm here to help!`;
       }
     }
 
+    // Enter key support
     document.addEventListener("DOMContentLoaded", () => {
+      const user = localStorage.getItem("loggedInUser");
+      if (user) showChat();
+
       document.getElementById("userInput").addEventListener("keydown", function (event) {
         if (event.key === "Enter") {
           event.preventDefault();
