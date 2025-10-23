@@ -1,3 +1,66 @@
+/* Base styles */
+body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  transition: background 1s, color 1s;
+}
+
+#loader {
+  margin-top: 20%;
+}
+
+.spinner {
+  margin: 20px auto;
+  width: 40px;
+  height: 40px;
+  border: 5px solid #ccc;
+  border-top: 5px solid #00bfff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+#main-content {
+  margin-top: 50px;
+}
+
+/* Theme: Nebula Drift */
+.theme-nebula {
+  background: radial-gradient(circle at top left, #2e003e, #000);
+  color: #ffb3ff;
+}
+
+/* Theme: Saturn Station */
+.theme-saturn {
+  background: linear-gradient(to bottom, #1a1a1a, #3e3e3e);
+  color: #d4af37;
+}
+
+/* Theme: Cosmic Noir */
+.theme-noir {
+  background-color: #000;
+  color: #00ffcc;
+}
+
+/* Theme: Launchpad Alpha */
+.theme-launchpad {
+  background-color: #0f172a;
+  color: #ff6f00;
+}
+
+/* Theme: Earthrise */
+.theme-earthrise {
+  background: linear-gradient(to top, #001f3f, #0074D9);
+  color: #7FDBFF;
+}
+
 body {
   font-family: Arial, sans-serif;
   text-align: center;
