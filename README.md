@@ -1,0 +1,2 @@
+# ComsoAI
+The Cosmo AI
