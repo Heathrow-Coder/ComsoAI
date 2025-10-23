@@ -1,1 +1,42 @@
+const messages = [
+  { sender: "user", message: "Hello!" },
+  { sender: "bot", message: "Hi there!" }
+];
 
+localStorage.setItem("chatHistory", JSON.stringify(messages));
+
+const saved = JSON.parse(localStorage.getItem("chatHistory") || "[]");
+
+function loadChatHistory() {
+  const chatBox = document.getElementById("chat-box");
+  const history = JSON.parse(localStorage.getItem("chatHistory") || "[]");
+  history.forEach(msg => {
+    const div = document.createElement("div");
+    div.className = "message " + msg.sender;
+    div.textContent = msg.message;
+    chatBox.appendChild(div);
+  });
+}
+
+function sendQuery() {
+  const input = document.getElementById("userInput");
+  const chatBox = document.getElementById("chat-box");
+  const userText = input.value.trim();
+  if (!userText) return;
+
+  const userMsg = document.createElement("div");
+  userMsg.className = "message user";
+  userMsg.textContent = userText;
+  chatBox.appendChild(userMsg);
+  saveMessage("user", userText);
+  input.value = "";
+  chatBox.scrollTop = chatBox.scrollHeight;
+
+  const botResponse = generateCosmoResponse(userText);
+  const botMsg = document.createElement("div");
+  botMsg.className = "message bot";
+  botMsg.textContent = botResponse;
+  chatBox.appendChild(botMsg);
+  saveMessage("bot", botResponse);
+  chatBox.scrollTop = chatBox.scrollHeight;
+}
