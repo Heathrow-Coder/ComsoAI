@@ -2,21 +2,32 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CosmoAI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CosmoAI Chat</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div id="loader">
-    <h1>🚀 Loading CosmoAI...</h1>
-    <div class="spinner"></div>
-  </div>
+  <div id="chat-container">
+    <header>
+      <h1>🪐 CosmoAI</h1>
+      <div style="margin-top: 0.5rem;">
+        <select id="themeSelect" onchange="applyTheme(this.value)">
+          <option value="nebula">Nebula Drift</option>
+          <option value="saturn">Saturn Station</option>
+          <option value="noir">Cosmic Noir</option>
+          <option value="launchpad">Launchpad Alpha</option>
+          <option value="earthrise">Earthrise</option>
+        </select>
+        <button onclick="cycleTheme()">Change Style</button>
+      </div>
+    </header>
 
-  <div id="main-content" style="display: none;">
-    <h2>Welcome to CosmoAI</h2>
-    <input type="text" id="userInput" placeholder="Ask me anything..." />
-    <button onclick="sendQuery()">Submit</button>
-    <div id="response"></div>
+    <div id="chat-box"></div>
+
+    <div id="input-area">
+      <input type="text" id="userInput" placeholder="Type your message..." />
+      <button onclick="sendQuery()">Send</button>
+    </div>
   </div>
 
   <script src="script.js"></script>
