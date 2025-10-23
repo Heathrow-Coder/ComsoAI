@@ -1,98 +1,48 @@
-// Theme cycling setup
-const themes = ["nebula", "saturn", "noir", "launchpad", "earthrise"];
-let currentThemeIndex = 0;
+function generateCosmoResponse(text) {
+  const lower = text.toLowerCase();
 
-function applyTheme(themeName) {
-  document.body.className = "";
-  document.body.classList.add(`theme-${themeName}`);
-  document.getElementById("themeSelect").value = themeName;
-}
-
-function cycleTheme() {
-  currentThemeIndex = (currentThemeIndex + 1) % themes.length;
-  applyTheme(themes[currentThemeIndex]);
-}
-
-// Chat logic
-function sendQuery() {
-  const input = document.getElementById("userInput");
-  const chatBox = document.getElementById("chat-box");
-  const userText = input.value.trim();
-  if (!userText) return;
-
-  // Add user message
-  const userMsg = document.createElement("div");
-  userMsg.className = "message user";
-  userMsg.textContent = userText;
-  chatBox.appendChild(userMsg);
-  input.value = "";
-  chatBox.scrollTop = chatBox.scrollHeight;
-
-  // Generate bot response
-  const botMsg = document.createElement("div");
-  botMsg.className = "message bot";
-  const response = generateCosmoResponse(userText);
-  botMsg.textContent = response;
-  chatBox.appendChild(botMsg);
-  chatBox.scrollTop = chatBox.scrollHeight;
-}
-
-// AI-like response generator
-function generateCosmoResponse(userText) {
-  const lower = userText.toLowerCase();
-
-  if (lower.includes("hello") || lower.includes("hi")) {
-    return "👋 Hello! I'm CosmoAI, your space-savvy assistant. What can I help you with today?";
-  } else if (lower.includes("weather")) {
-    return "☁️ I can't check live weather yet, but I recommend packing for cosmic conditions!";
-  } else if (lower.includes("joke")) {
-    return "🪐 Why did the astronaut break up with the alien? They needed space!";
-  } else if (lower.includes("theme") || lower.includes("style")) {
-    return "🎨 You can change my style using the dropdown or the 'Change Style' button above!";
-  } else if (lower.includes("who are you")) {
-    return "🚀 I'm CosmoAI, your interstellar companion built to explore ideas and answer questions.";
-  } else if (lower.includes("help")) {
-    return "🛠️ I'm here to chat, answer questions, and look stylish doing it. Ask me anything!";
-  } else {
-    return `🤖 I'm still learning, but I heard you say: "${userText}". Want to ask me something cosmic?`;
+  // Greetings
+  if (/\b(hi|hello|hey|yo|greetings)\b/.test(lower)) {
+    return "👋 Hello! I'm CosmoAI, your space-savvy assistant. What can I help you explore today?";
   }
-}
 
-// Enable Enter key to send message
-document.addEventListener("DOMContentLoaded", function () {
-  applyTheme(themes[currentThemeIndex]);
+  // Identity
+  if (lower.includes("who are you") || lower.includes("what are you")) {
+    return "🚀 I'm CosmoAI — your interstellar companion built to chat, assist, and explore ideas with you.";
+  }
 
-  const input = document.getElementById("userInput");
-  input.addEventListener("keydown", function (event) {
-    if (event.key === "Enter") {
-      event.preventDefault();
-      sendQuery();
-    }
-  });
-});
+  // Help
+  if (lower.includes("help") || lower.includes("how do i")) {
+    return "🛠️ You can ask me anything — from space facts to coding tips. Just type your question and hit Enter!";
+  }
 
-function sendQuery() {
-  const input = document.getElementById("userInput"); // Gets the input box
-  const chatBox = document.getElementById("chat-box"); // Gets the chat display area
-  const userText = input.value.trim(); // Gets the user's message
+  // Weather
+  if (lower.includes("weather")) {
+    return "☁️ I can't check live weather yet, but I recommend packing for cosmic conditions!";
+  }
 
-  if (!userText) return; // If input is empty, do nothing
+  // Jokes
+  if (lower.includes("joke") || lower.includes("funny")) {
+    const jokes = [
+      "🪐 Why did the astronaut break up with the alien? They needed space!",
+      "🌌 What do you call a loopy comet? A space case!",
+      "🚀 Why don’t astronauts get hungry after launch? Because they’ve just had a big blast!"
+    ];
+    return jokes[Math.floor(Math.random() * jokes.length)];
+  }
 
-  // 🟦 Add user message to chat
-  const userMsg = document.createElement("div");
-  userMsg.className = "message user"; // Style as user message
-  userMsg.textContent = userText;
-  chatBox.appendChild(userMsg);
+  // Time
+  if (lower.includes("time")) {
+    const now = new Date();
+    return `🕒 The current time is ${now.toLocaleTimeString()}.`;
+  }
 
-  input.value = ""; // Clear input box
-  chatBox.scrollTop = chatBox.scrollHeight; // Scroll to bottom
+  // Date
+  if (lower.includes("date")) {
+    const today = new Date();
+    return `📅 Today is ${today.toDateString()}.`;
+  }
 
-  // 🟥 Add bot response to chat
-  const botMsg = document.createElement("div");
-  botMsg.className = "message bot"; // Style as bot message
-  const response = generateCosmoResponse(userText); // Generate reply
-  botMsg.textContent = response;
-  chatBox.appendChild(botMsg);
-
-  chatBox.scrollTop = chatBox.scrollHeight; // Scroll to bottom again
+  // Fallback
+  return `🤖 I heard you say: "${text}". I'm still learning, but I'm here to help — try asking me about space, jokes, or time!`;
 }
